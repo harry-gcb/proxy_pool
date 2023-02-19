@@ -1,23 +1,21 @@
 FROM python:3.6-alpine
 
-MAINTAINER jhao104 <j_hao104@163.com>
+MAINTAINER harry.gao
 
 WORKDIR /app
 
-COPY ./requirements.txt .
+COPY . .
+# COPY ./requirements.txt .
 
-# apk repository
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
-
-# timezone
-RUN apk add -U tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apk del tzdata
-
-# runtime environment
-RUN apk add musl-dev gcc libxml2-dev libxslt-dev && \
+# 1. apk repository
+# 2. timezone
+# 3. runtime environment
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && \ 
+    apk add -U tzdata && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apk del tzdata && \
+    apk add musl-dev gcc libxml2-dev libxslt-dev && \
     pip install --no-cache-dir -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/ && \
     apk del gcc musl-dev
 
-COPY . .
 
 EXPOSE 5010
 
